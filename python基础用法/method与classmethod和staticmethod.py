@@ -1,47 +1,36 @@
 '''
 method: 通过实例调用时，可以引用类内部的任何属性和方法
 
-classmethod: 无需实例化，可以调用类属性和类方法，无法取到类内部的属性方法
 
-staticmethod:无论用类调用还是用实例调用，都无法取到类内部的属性和方法，完全独立的一个方法
+@staticmethod和@classmethod的作用与区别
+
+一般来说，要使用某个类的方法，需要先实例化一个对象再调用方法。
+而使用@staticmethod或@classmethod，就可以不需要实例化，直接类名.方法名()来调用。
+
+区别：
+1，@staticmethod不需要表示自身对象的self和自身类的cls参数，就跟使用函数一样。
+2，@classmethod也不需要self参数，但第一个参数需要是表示自身类的cls参数。
+
+如果在@staticmethod中要调用到这个类的一些属性方法，只能直接类名.属性名或类名.方法名。
+而@classmethod因为持有cls参数，可以来调用类的属性，类的方法，实例化对象等，避免硬编码。
 
 '''
 
-class Test(object):
-	x = 123
-	def __init__(self):
-		self.y = 456
-	def bar1(self):
-		print("hello world")
-	@classmethod
-	def bar2(cls):
-		print('bad wOrld')
-
-	@staticmethod
-	def bar3():
-		print('======')
-	def fool(self):
-		print(self.x)
-		print(self.y)
-		self.bar1()
-		self.bar2()
-		self.bar3()
-	@classmethod
-	def foo2(cls):
-		print(cls.x)
-		print(cls.y)         #结果报错，可以调用类属性和类方法，但是无法取到类内部的属性方法
-		cls.bar1()
-		cls.bar2()
-		cls.bar3()
-	@staticmethod
-	def foo3(obj):              #结果报错，缺少参数，成为完全独立的一个方法，无法被类调用
-		print(obj.x)
-		print(obj.y)
-		obj.bar1()
-		obj.bar2()
-		obj.bar3()
-t = Test()
-t.fool()
-t.foo2()
-t.foo3()
-
+class A(object):  
+    bar = 1  
+    def foo(self):  
+        print 'foo'  
+ 
+    @staticmethod  
+    def static_foo():  
+        print 'static_foo'  
+        print A.bar  
+ 
+    @classmethod  
+    def class_foo(cls):  
+        print 'class_foo'  
+        print cls.bar  
+        cls().foo()  
+  
+A.static_foo()  
+A.class_foo()  
